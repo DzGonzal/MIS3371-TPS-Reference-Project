@@ -25,6 +25,13 @@ Use this page to find the example artifact that corresponds to the course work.
 | How Week 7 validation/business rules work | `07-validation-business-rules/week7-validation-business-rules-notes.md` |
 | Week 7 validation test cases | `07-validation-business-rules/week7-testing-checklist.md` |
 | Current JavaScript implementation | `../src/app.js` |
+| Why Week 8 adds a trusted backend | `08-local-backend/week8-local-backend-notes.md` |
+| Which Week 7 input fields the backend receives | `08-local-backend/week8-data-contract.md` |
+| How Week 8 expected/actual tests are organized | `08-local-backend/week8-testing-checklist.md` |
+| Week 8 team checkpoint (4 points) | `08-local-backend/week8-team-checkpoint.md` |
+| Working local backend | `../backend/backend.js` |
+| Repeatable backend tests | `../backend/test-backend.js` |
+| Object/JSON demonstration | `../backend/json-demo.js` |
 
 ## Recommended Reading Order
 
@@ -66,3 +73,16 @@ Later artifacts should be justified by earlier design decisions.
 1. `07-validation-business-rules/week7-validation-business-rules-notes.md`
 2. `src/app.js`
 3. `07-validation-business-rules/week7-testing-checklist.md`
+
+
+## Week 8 reading order
+
+1. `08-local-backend/week8-local-backend-notes.md` — purpose and trust boundary
+2. `08-local-backend/week8-data-contract.md` — keep all six employee-entered fields consistent with Week 7
+3. `../backend/backend.js` — independent validation, conditional rules, structured result
+4. `../backend/test-backend.js` — run and compare expected/actual cases
+5. `08-local-backend/week8-testing-checklist.md` — test coverage and definition of done
+6. `../backend/json-demo.js` — optional JSON preview for Week 9
+7. `08-local-backend/week8-team-checkpoint.md` — four-point, scenario-specific team activity
+
+**Week 8 intentionally does not modify or connect `src/`.** Week 9 adds a local HTTP API and `fetch()`; AWS begins in Week 10; DynamoDB in Week 11.

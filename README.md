@@ -13,11 +13,11 @@ The capstone project is not a collection of unrelated weekly assignments. It is 
 
 This reference project uses an **Expense Reimbursement System** to show how the pieces connect:
 
-**Business problem → requirements → business rules → workflow → states → data → architecture → interface → behavior → API/cloud → deployment**
+**Business problem → requirements → business rules → workflow → states → data → architecture → interface → behavior → local backend → local API → cloud → persistence**
 
 The repository will grow as the course progresses. Students are not expected to implement material that has not yet been covered in class.
 
-### Current release: through Week 7
+### Current release: through Week 8
 
 This version includes:
 
@@ -40,8 +40,11 @@ This version includes:
 - Flexbox layout
 - Responsive behavior
 - Focus and hover feedback
+- Week 6–7 browser behavior and conditional validation
+- Week 8 independent local Node.js backend with all six employee-entered fields
+- Week 8 named tests for valid/invalid/boundary scenarios and local JSON demonstration
 
-**Not implemented yet:** API calls, trusted backend enforcement, database persistence, authentication, AWS deployment.
+**Not implemented yet:** connected frontend/backend, HTTP/API endpoints, AWS deployment, database persistence, authentication, official transaction storage or complete approval workflow.
 
 ---
 
@@ -82,11 +85,17 @@ MIS3371-TPS-Reference-Project/
 │   ├── 04-interface/
 │   ├── 05-styling/
 │   ├── 06-javascript/
-│   └── 07-validation-business-rules/
-└── src/
-    ├── index.html
-    ├── styles.css
-    └── app.js
+│   ├── 07-validation-business-rules/
+│   └── 08-local-backend/
+├── src/
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
+└── backend/
+    ├── README.md
+    ├── backend.js
+    ├── test-backend.js
+    └── json-demo.js
 ```
 
 ---
@@ -118,30 +127,30 @@ A useful quality check is:
 | Week 5 | CSS + responsive user interface | Complete |
 | Week 6 | JavaScript fundamentals, DOM, events, and first business-rule behavior | Complete |
 | Week 7 | Conditional validation + additional business-rule behavior | Complete |
-| Week 8 | Finish/test client side + Milestone 2 + JSON/HTTP/API introduction | Not released yet |
-| Week 9 | REST + `fetch()` + local backend concept + AWS Lambda/API Gateway | Not released yet |
-| Week 10 | DynamoDB persistence: save + retrieve transactions | Not released yet |
-| Week 11 | End-to-end integration and debugging | Not released yet |
-| Week 12 | Final testing + release candidate | Not released yet |
-| Week 13 | Buffer + presentation preparation | Not released yet |
-| Weeks 14–15 | Final project presentations (4 sessions) | Not released yet |
+| Week 8 | Independent local backend validation + tests; Milestone 2 remains client-side | Complete |
+| Week 9 | Local client–server API using HTTP, JSON, Express, and `fetch()` | Upcoming |
+| Week 10 | AWS Lambda + API Gateway (reuse local application logic) | Upcoming |
+| Week 11 | DynamoDB: save and retrieve one transaction | Upcoming |
+| Week 12 | End-to-end integration, debugging, testing, Milestone 4 | Upcoming |
+| Week 13 | Buffer, documentation and presentation preparation | Upcoming |
+| Weeks 14–15 | Final project presentations (4 sessions) | Reserved |
 
 
 ---
 
-## Planned Second-Half Roadmap
+## Final Second-Half Roadmap
 
-The remaining course moves quickly from the completed client interface into a small serverless transaction-processing architecture:
+Students build one transaction-processing application incrementally, without introducing several major technologies at once:
 
-- **Week 8:** finish and test the client-side system, complete Milestone 2, then introduce JSON, HTTP, REST, and a first `fetch()` example.
-- **Week 9:** connect the browser to a backend concept, then move that logic into **AWS Lambda + API Gateway**.
-- **Week 10:** add **DynamoDB** so teams can save and retrieve official transaction records.
-- **Week 11:** complete end-to-end integration and debugging.
-- **Week 12:** final testing and release-candidate work.
-- **Week 13:** buffer and presentation preparation.
-- **Weeks 14–15:** four final project presentation sessions.
+- **Week 8:** local Node.js backend/application logic; receive an object, validate independently, apply business rules, return a structured result, and test. **No server, frontend connection, HTTP/API, AWS, or database.** Milestone 2 remains a separate 60-point client-side deliverable; weekly checkpoint is four points.
+- **Week 9:** complete a **local client–server** system with HTTP/JSON, Express, an API endpoint, and browser `fetch()` using the existing frontend and backend logic.
+- **Week 10:** move/reuse backend logic in **AWS Lambda + API Gateway**.
+- **Week 11:** use **DynamoDB** to save and retrieve one official transaction.
+- **Week 12:** end-to-end integration, testing, error handling, and Milestone 4 (no major new technology).
+- **Week 13:** buffer, corrections, documentation, and presentation preparation.
+- **Weeks 14–15:** four final presentation sessions only.
 
-The scope stays intentionally small: one main transaction path, one working API flow, and one persistent transaction record are more valuable than many partially implemented features.
+The required final scope is one meaningful browser → API → application → database transaction flow plus retrieval. Advanced status changes, authentication implementation, S3 hosting, and complex audit infrastructure are outside the required implementation scope.
 
 ---
 
@@ -239,3 +248,19 @@ The current `src/app.js` demonstrates a complete browser-side validation flow fo
 6. If checks pass, the page explains which approval path would apply.
 
 This remains client-side behavior. The authoritative application/server tier must enforce the same critical rules later.
+
+
+---
+
+## Week 8 Local Backend Status
+
+The *original Week 7* `src/index.html`, `src/styles.css`, and `src/app.js` are retained unchanged. Week 8 adds `backend/` and `docs/08-local-backend/`, without connecting the two layers. The new backend checks all six employee-entered fields from the original data dictionary: ID, date, category, amount, description, and receipt flag. It independently enforces the receipt and director approval thresholds.
+
+To test locally from the repository root:
+
+```bash
+node backend/test-backend.js
+node backend/json-demo.js
+```
+
+Node.js runs these local scripts outside the browser; **it does not automatically start a server**. Accepted examples intentionally return `persisted: false`. The demo status, ID, and timestamp are illustrations of application responsibility—not official stored records. For details, see [Week 8 notes](docs/08-local-backend/week8-local-backend-notes.md), [data contract](docs/08-local-backend/week8-data-contract.md), and [test checklist](docs/08-local-backend/week8-testing-checklist.md). Teams adapt the logic to their own approved transaction; the reference expense thresholds are not universal requirements.

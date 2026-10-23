@@ -17,7 +17,7 @@ This reference project uses an **Expense Reimbursement System** to show how the 
 
 The repository will grow as the course progresses. Students are not expected to implement material that has not yet been covered in class.
 
-### Current release: through Week 8
+### Current release: through Week 9
 
 This version includes:
 
@@ -43,8 +43,10 @@ This version includes:
 - Week 6–7 browser behavior and conditional validation
 - Week 8 independent local Node.js backend with all six employee-entered fields
 - Week 8 named tests for valid/invalid/boundary scenarios and local JSON demonstration
+- Week 9 complete local frontend → Express HTTP API → existing backend integration
+- Browser `fetch()`, backend response messages, and direct JSON/curl demonstrations
 
-**Not implemented yet:** connected frontend/backend, HTTP/API endpoints, AWS deployment, database persistence, authentication, official transaction storage or complete approval workflow.
+**Not implemented yet:** AWS deployment, database persistence, authentication, official transaction storage or complete approval workflow.
 
 ---
 
@@ -86,11 +88,16 @@ MIS3371-TPS-Reference-Project/
 │   ├── 05-styling/
 │   ├── 06-javascript/
 │   ├── 07-validation-business-rules/
-│   └── 08-local-backend/
+│   ├── 08-local-backend/
+│   └── 09-local-api/
 ├── src/
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js
+├── server/
+│   └── server.js
+├── demo-requests/
+├── package.json
 └── backend/
     ├── README.md
     ├── backend.js
@@ -128,7 +135,7 @@ A useful quality check is:
 | Week 6 | JavaScript fundamentals, DOM, events, and first business-rule behavior | Complete |
 | Week 7 | Conditional validation + additional business-rule behavior | Complete |
 | Week 8 | Independent local backend validation + tests; Milestone 2 remains client-side | Complete |
-| Week 9 | Local client–server API using HTTP, JSON, Express, and `fetch()` | Upcoming |
+| Week 9 | Local client–server API using HTTP, JSON, Express, and `fetch()` | Complete |
 | Week 10 | AWS Lambda + API Gateway (reuse local application logic) | Upcoming |
 | Week 11 | DynamoDB: save and retrieve one transaction | Upcoming |
 | Week 12 | End-to-end integration, debugging, testing, Milestone 4 | Upcoming |
@@ -264,3 +271,20 @@ node backend/json-demo.js
 ```
 
 Node.js runs these local scripts outside the browser; **it does not automatically start a server**. Accepted examples intentionally return `persisted: false`. The demo status, ID, and timestamp are illustrations of application responsibility—not official stored records. For details, see [Week 8 notes](docs/08-local-backend/week8-local-backend-notes.md), [data contract](docs/08-local-backend/week8-data-contract.md), and [test checklist](docs/08-local-backend/week8-testing-checklist.md). Teams adapt the logic to their own approved transaction; the reference expense thresholds are not universal requirements.
+
+
+---
+
+## Week 9 Connected Local System
+
+The original `src/index.html`, `src/styles.css`, and `src/app.js` remain the only frontend files. The Week 9 change connects the same form to `POST /api/expenses` through `fetch()`. There is **no** `week9.html`, `week9-api.js`, or second submit handler. The existing Week 8 `backend/backend.js` retains all authoritative validations. `server/server.js` handles HTTP only.
+
+From the project root, run:
+
+```bash
+npm install
+npm start
+```
+
+Visit http://localhost:3000/ . The API is `POST http://localhost:3000/api/expenses`.
+Run `npm run test:backend` for direct business-logic tests. For the JSON-file demonstrations, use the commands in [Week 9 checkpoint guide](docs/09-local-api/week9-checkpoint.md). Accepted requests return `persisted: false`: no database or AWS yet.

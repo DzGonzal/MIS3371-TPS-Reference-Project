@@ -1,0 +1,13 @@
+{
+  "name": "mis3371-week9-expense-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One unified processExpense backend; Express handles HTTP only.",
+  "scripts": {
+    "start": "node server/server.js",
+    "test:backend": "node backend/test-backend.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

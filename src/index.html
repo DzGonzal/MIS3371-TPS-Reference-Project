@@ -22,7 +22,7 @@
 
   <!--
     MIS 3371 REFERENCE CASE STUDY
-    Week 7 — HTML + CSS + JavaScript Validation Interface
+    Week 9 — Existing Frontend Connected to the Local Express API
 
     This page continues the SAME transaction designed in Weeks 1–4.
 
@@ -37,17 +37,11 @@
     - Responsive layout
     - Focus and hover feedback
 
-    Current Week 7 scope also includes:
-    - JavaScript business-rule functions
-    - DOM events and messages
-    - Conditional receipt validation
-    - Submit-time browser checks
-
-    Not implemented yet:
-    - Trusted server/application enforcement
-    - API/backend
-    - Database persistence
-    - Authentication
+    Week 9 adds:
+    - The SAME form and stylesheet from prior weeks
+    - Browser fetch() POST /api/expenses in src/app.js
+    - Independent backend rules in backend/backend.js
+    - No database persistence or AWS yet
   -->
 
 
@@ -110,7 +104,7 @@
       </p>
 
 
-      <form id="expenseForm" class="expense-form" method="get">
+      <form id="expenseForm" class="expense-form" method="post">
 
         <fieldset>
 
@@ -260,8 +254,8 @@
               Business rule:
               If expenseAmount > 75, receipt evidence is required.
 
-              JavaScript and later server/application logic will
-              implement this conditional rule.
+              Browser JavaScript offers immediate feedback; backend/backend.js
+              independently enforces the same conditional rule.
             -->
 
             <input
@@ -288,8 +282,8 @@
         <p id="formMessage" class="form-message" aria-live="polite"></p>
 
         <p class="form-note">
-          Week 7 note: browser-side JavaScript now checks the conditional receipt rule
-          before showing a successful client-side result. Trusted server enforcement comes later.
+          Week 9: JavaScript submits JSON to our local API. The backend validates
+          independently; accepted requests are not yet stored in a database.
         </p>
 
       </form>
@@ -429,6 +423,7 @@
           <dt>Transaction ID</dt>
 
           <dd>
+
             <span class="data-label">Field</span>
             <code>transactionId</code><br>
 
@@ -521,6 +516,7 @@
           <dt>Director Reviewed At</dt>
 
           <dd>
+
             <span class="data-label">Field</span>
             <code>directorReviewedAt</code><br>
 
@@ -583,27 +579,14 @@
       <h2>What Happens Next?</h2>
 
       <p>
-        At the end of Week 5, the client-side interface should be
-        structurally complete, readable, and responsive.
+        In Week 9, the same frontend now communicates with our local Express API.
+        This is a demonstration of processing, not permanent storage.
       </p>
 
       <ul class="next-steps">
-
-        <li>
-          <strong>Week 6:</strong>
-          JavaScript fundamentals, DOM access, and events
-        </li>
-
-        <li>
-          <strong>Week 7:</strong>
-          Client-side validation and business-rule behavior
-        </li>
-
-        <li>
-          <strong>Later:</strong>
-          JSON, Fetch, API integration, AWS, persistence, and audit history
-        </li>
-
+        <li><strong>Week 10:</strong> Reuse the backend in AWS Lambda and API Gateway</li>
+        <li><strong>Week 11:</strong> Save and retrieve a transaction using DynamoDB</li>
+        <li><strong>Week 12:</strong> End-to-end integration and testing</li>
       </ul>
 
     </section>

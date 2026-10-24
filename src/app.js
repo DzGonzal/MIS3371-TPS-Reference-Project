@@ -6,8 +6,17 @@ const MIN_EXPENSE_AMOUNT = 0.01;
 const RECEIPT_THRESHOLD = 75;
 const DIRECTOR_APPROVAL_THRESHOLD = 5000;
 
+// These are the actual option values in src/index.html, not the visible labels.
+// Browser validation helps the user; backend.js independently enforces the same contract.
+const ALLOWED_CATEGORIES = [
+  'client-meal', 'travel', 'lodging', 'office-supplies', 'other'
+];
+
 const form = document.querySelector('#expenseForm');
 const dateInput = document.querySelector('#expenseDate');
+const employeeIdInput = document.querySelector('#employeeId');
+const categoryInput = document.querySelector('#expenseCategory');
+const descriptionInput = document.querySelector('#description');
 const submitButton = form.querySelector('button[type="submit"]');
 const amountInput = document.querySelector('#expenseAmount');
 const receiptCheckbox = document.querySelector('#receiptAttached');
@@ -21,7 +30,11 @@ const formMessage = document.querySelector('#formMessage');
 // ---------------------------------------------------------
 
 function isAmountInAcceptedRange(amount) {
-  return Number.isFinite(amount) && amount >= MIN_EXPENSE_AMOUNT;
+  // Currency requires whole cents; allow tiny floating-point representation differences.
+  const unroundedCents = amount * 100;
+  const cents = Math.round(unroundedCents);
+  return Number.isFinite(amount) && amount >= MIN_EXPENSE_AMOUNT &&
+    Number.isSafeInteger(cents) && Math.abs(unroundedCents - cents) <= 1e-7;
 }
 
 function requiresReceipt(amount) {
@@ -67,7 +80,7 @@ function updateApprovalMessage() {
   // Do not apply approval-routing rules to an invalid amount.
   if (!isAmountInAcceptedRange(amount)) {
     approvalMessage.textContent =
-      'Amount is outside the accepted range. Enter an amount greater than $0.00.';
+      'Enter an amount of at least $0.01, in whole cents.';
     approvalMessage.className = 'decision-message error-message';
     return;
   }
@@ -162,28 +175,52 @@ async function handleSubmit(event) {
   // Stop regular browser form navigation: JavaScript sends JSON with fetch().
   event.preventDefault();
 
-  // Check built-in HTML constraints (required, amount min/step, etc.).
-  if (!form.reportValidity()) return;
-
-  // A user can type a date or leave a form open overnight, so check again.
+  // Refresh the date maximum if this page has been left open overnight.
   dateInput.max = todayLocalString();
-  if (dateInput.value > dateInput.max) {
+  if (dateInput.value && dateInput.value > dateInput.max) {
     formMessage.textContent = 'Cannot continue: expense date cannot be in the future.';
     formMessage.className = 'form-message error-message';
     dateInput.focus();
     return;
   }
 
-  const amount = Number(amountInput.value);
+  // Check native HTML constraints first (required, date, min, step, etc.).
+  if (!form.reportValidity()) return;
 
-  // Retain our helpful client-side checks from Week 7.
+  // Native required considers whitespace-only text nonempty, so trim text.
+  const employeeId = employeeIdInput.value.trim();
+  if (!employeeId) {
+    formMessage.textContent = 'Cannot continue: enter an employee ID.';
+    formMessage.className = 'form-message error-message';
+    employeeIdInput.focus();
+    return;
+  }
+
+  const expenseCategory = categoryInput.value;
+  if (!ALLOWED_CATEGORIES.includes(expenseCategory)) {
+    formMessage.textContent = 'Cannot continue: select a valid expense category.';
+    formMessage.className = 'form-message error-message';
+    categoryInput.focus();
+    return;
+  }
+
+  const description = descriptionInput.value.trim();
+  if (!description) {
+    formMessage.textContent = 'Cannot continue: enter a business description.';
+    formMessage.className = 'form-message error-message';
+    descriptionInput.focus();
+    return;
+  }
+
+  const amount = Number(amountInput.value);
   if (!isAmountInAcceptedRange(amount)) {
-    formMessage.textContent = 'Cannot continue: the expense amount is outside the accepted range.';
+    formMessage.textContent = 'Cannot continue: enter an amount of at least $0.01, in whole cents.';
     formMessage.className = 'form-message error-message';
     amountInput.focus();
     return;
   }
 
+  // Keep the Week 7 conditional receipt rule.
   if (requiresReceipt(amount) && !receiptCheckbox.checked) {
     formMessage.textContent = 'Cannot continue: attach receipt evidence for an expense greater than $75.';
     formMessage.className = 'form-message error-message';
@@ -191,13 +228,14 @@ async function handleSubmit(event) {
     return;
   }
 
-  // The six keys and category option values match the unchanged Week 8 backend.
+  // The six field names and category values match src/index.html and backend/backend.js.
+  // .checked already supplies a true/false Boolean.
   const expense = {
-    employeeId: document.querySelector('#employeeId').value.trim(),
+    employeeId,
     expenseDate: dateInput.value,
-    expenseCategory: document.querySelector('#expenseCategory').value,
+    expenseCategory,
     expenseAmount: amount,
-    description: document.querySelector('#description').value.trim(),
+    description,
     receiptAttached: receiptCheckbox.checked
   };
 
